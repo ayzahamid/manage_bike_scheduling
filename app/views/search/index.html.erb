@@ -5,6 +5,11 @@
   %>
 </div>
 
+<div class="flex p-4" data-date-filters>
+  <label class="mr-2">Date Filter:</label>
+  <%= date_field_tag :date, Date.today %>
+</div>
+
 <div class="search-bikes" data-search-bikes>
   <div class="w-full text-center italic p-2">
     Searching...

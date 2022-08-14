@@ -1,6 +1,6 @@
 class SearchController < ApplicationController
   def index
-    @bikes = BikeSchedule.new.fetch_available_bikes
+    @bikes = BikeSchedule.new(params[:date]).fetch_available_bikes
 
     respond_to do |format|
       format.html

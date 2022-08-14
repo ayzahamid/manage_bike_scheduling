@@ -58,13 +58,14 @@ export const generateSearchBikesHtml = (bikes, orderBy) => {
 
 export const getBikes = () => {
   return axios
-    .get('/search', axiosConfig)
+    .get('/search', Object.assign({}, axiosConfig, { params: { date: document.querySelector('#date').value } }))
     .then(({ data: bikes }) => bikes)
     .catch((error) => console.log(error));
 };
 
 const onloadSearch = () => {
   const searchBikesEl = document.querySelector('[data-search-bikes]');
+
   if (!!searchBikesEl) {
     const searchOrderByEl = document.querySelector('[data-search-order-by]');
     getBikes(searchBikesEl)

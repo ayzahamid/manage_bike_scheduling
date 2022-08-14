@@ -1,8 +1,8 @@
 class BikeSchedule < Service
   attr_reader :date
 
-  def initialize
-    @date = Date.today
+  def initialize(date = nil)
+    @date = date || Date.today
   end
 
   def fetch_available_bikes
