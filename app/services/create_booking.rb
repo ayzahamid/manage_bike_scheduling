@@ -16,7 +16,7 @@ class CreateBooking < Service
       booking.save
       booking
     else
-      booking.errors.add(:date, "is not available for this bike")
+      booking.errors.add(:date, 'is not available for this bike')
       booking
     end
   end
@@ -24,6 +24,6 @@ class CreateBooking < Service
   private
 
   def bike_available?
-    @bike.bookings.on_date(@date).empty?
+    @bike.schedules.on_date(@date).empty? && @bike.bookings.on_date(@date).empty?
   end
 end

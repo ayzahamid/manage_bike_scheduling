@@ -2,6 +2,7 @@
 seed_filenames = %w[
   bike
   booking
+  schedule
 ]
 
 seed_filenames.map do |filename|
