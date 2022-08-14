@@ -13,6 +13,11 @@ export const ORDER_BY = {
   PRICE: 'Price',
 };
 
+export const ORDER_TO_COLUMN_NAME = {
+  Name: 'name',
+  Price: 'price_per_day'
+};
+
 const getSearchBikeHtml = (bike) => (`
   <a href="/bikes/${bike.id}" target="_blank" class="card card--search">
     <div class="image" style='background-image: url("/assets/${bike.image_name}")'>
@@ -25,10 +30,27 @@ const getSearchBikeHtml = (bike) => (`
   </a>
 `);
 
+export const sortByKey = (array, key) => {
+  return array.sort(function(a, b) {
+    let x, y;
+
+    if (key == 'price_per_day'){
+      x = parseFloat(a[key]);
+      y = parseFloat(b[key]);
+    } else {
+      x = a[key];
+      y = b[key];
+    }
+
+    return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+  });
+}
+
+
 // TODO Implement orderBy functionality, support default, name & price
 export const generateSearchBikesHtml = (bikes, orderBy) => {
   let searchBikesHtml = '';
-  bikes.forEach((bike) => {
+  sortByKey(bikes, ORDER_TO_COLUMN_NAME[orderBy] || ORDER_BY.DEFAULT).forEach((bike) => {
     searchBikesHtml = searchBikesHtml.concat(getSearchBikeHtml(bike));
   });
   return searchBikesHtml;
@@ -44,12 +66,12 @@ export const getBikes = () => {
 const onloadSearch = () => {
   const searchBikesEl = document.querySelector('[data-search-bikes]');
   if (!!searchBikesEl) {
+    const searchOrderByEl = document.querySelector('[data-search-order-by]');
     getBikes(searchBikesEl)
       .then((bikes) => {
-        searchBikesEl.innerHTML = generateSearchBikesHtml(bikes, ORDER_BY.DEFAULT);
+        searchBikesEl.innerHTML = generateSearchBikesHtml(bikes, searchOrderByEl.value);
       });
 
-    const searchOrderByEl = document.querySelector('[data-search-order-by]');
     // TODO Re-render search results if orderBy changes without an API request
   }
 };
@@ -59,6 +81,7 @@ if (window.attachEvent) { // IE
   window.attachEvent('onload', onloadSearch);
 } else if (window.addEventListener) {
   window.addEventListener('load', onloadSearch, false);
+  window.addEventListener('change', onloadSearch, false);
 } else {
   document.addEventListener('load', onloadSearch, false);
 }
