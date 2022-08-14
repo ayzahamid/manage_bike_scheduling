@@ -58,7 +58,7 @@ export const generateSearchBikesHtml = (bikes, orderBy) => {
 
 export const getBikes = () => {
   return axios
-    .get('/search', Object.assign({}, axiosConfig, { params: { date: document.querySelector('#date').value } }))
+    .get('/search', Object.assign({}, axiosConfig, { params: { date: document.querySelector('#date') && document.querySelector('#date').value } }))
     .then(({ data: bikes }) => bikes)
     .catch((error) => console.log(error));
 };

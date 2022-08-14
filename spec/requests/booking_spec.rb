@@ -41,6 +41,22 @@ RSpec.describe "Bookings", type: :request do
       expect(response.body).to include("Thanks for your booking")
     end
 
+    it "responds with 422 when the bike is unavailable" do
+      bike = FactoryBot.create(:bike)
+      bike.schedules.create!(unavailable_date: 2.days.from_now.strftime("%F"))
+
+      booking_params = {
+        bike_id: bike.id.to_s,
+        user_full_name: "User 1",
+        date: 2.days.from_now.strftime("%F")
+      }
+      booking = FactoryBot.build_stubbed(:booking)
+
+      post "/bikes/#{bike.id}/booking", xhr: true, params: booking_params
+
+      expect(response).to have_http_status(:unprocessable_entity)
+    end
+
     it "responds with 422 when booking is unsuccessful" do
       bike = FactoryBot.create(:bike)
       booking_params = {
