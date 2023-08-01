@@ -1,7 +1,6 @@
 class SearchController < ApplicationController
   def index
-    # TODO: only get available bikes. Move to service
-    @bikes = Bike.all
+    @bikes = BikeSchedule.new(params[:date]).fetch_available_bikes
 
     respond_to do |format|
       format.html

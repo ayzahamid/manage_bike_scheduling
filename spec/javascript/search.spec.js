@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getBikes, generateSearchBikesHtml, ORDER_BY } from "../../app/javascript/packs/search.js";
+import { getBikes, sortByKey, generateSearchBikesHtml, ORDER_BY, ORDER_TO_COLUMN_NAME } from "../../app/javascript/packs/search.js";
 
 jest.mock('axios');
 
@@ -30,5 +30,43 @@ describe('generateSearchBikesHtml()', () => {
     expect(response).toMatch(/(\/bikes\/123)/i);
     expect(response).toMatch(/(\/assets\/some_image.js)/i);
     expect(response).toMatch(/(\$2.20 per day)/i);
+  });
+
+  it('sortByKey - sort bikes based on name', async () => {
+    const bikes = [{
+      description: 'some_description',
+      id: 1,
+      image_name: 'some_image.js',
+      name: 'May',
+      price_per_day: '2.1',
+    },{
+      description: 'some_description',
+      id: 2,
+      image_name: 'some_image1.js',
+      name: 'Albert',
+      price_per_day: '9.2',
+    }];
+    const sorted_bikes = sortByKey(bikes, ORDER_TO_COLUMN_NAME[ORDER_BY.NAME] || ORDER_BY.DEFAULT)
+
+    expect(sorted_bikes.map(val => val.name)).toEqual(["Albert", "May"]);
+  });
+
+  it('sortByKey - sort bikes based on price', async () => {
+    const bikes = [{
+      description: 'some_description',
+      id: 1,
+      image_name: 'some_image.js',
+      name: 'May',
+      price_per_day: '2.1',
+    },{
+      description: 'some_description',
+      id: 2,
+      image_name: 'some_image1.js',
+      name: 'Albert',
+      price_per_day: '9.2',
+    }];
+    const sorted_bikes = sortByKey(bikes, ORDER_TO_COLUMN_NAME[ORDER_BY.PRICE] || ORDER_BY.DEFAULT)
+
+    expect(sorted_bikes.map(val => val.price_per_day)).toEqual(["2.1", "9.2"]);
   });
 });
